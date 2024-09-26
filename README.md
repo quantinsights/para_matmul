@@ -1,5 +1,4 @@
 ## Concurrent Matrix Multiplication
----
 
 This exercise is meant to be a small exploration of the speed-up factor attained by simple parallel matrix multiplication. The below is one of the sample outputs.
 
