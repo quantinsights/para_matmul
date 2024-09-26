@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <thread>
 #include <chrono>
+#include <string>
 
 // Sequential matrix multiplication 
 template <class T>
@@ -96,11 +97,27 @@ int main()
     std::cout << "\nWall clock time for single threaded matrix multiplication = " << time_taken.count();
 
     //Simple concurrent block matrix multiplication
-    int u {m};
-    int v {p};
     std::cout << "\n\nSimple concurrent block matrix multiplication follows...";
-    std::cout << "\nEnter tile width and tile height = ";
-    std::cin >> u >> v;
+
+    // Determine the number of threads that can be run in parallel on different CPU cores
+    int num_cores = std::thread::hardware_concurrency();
+
+    std::cout << "\n\nThe default behavior is to divide the total work of computing " << (m * p) << " elements into"
+                << num_cores << " blocks/tiles, with each tile of size  u * v, where u = " << (m / num_cores) << ", "
+                << "v = " << p;
+
+    int u {static_cast<int>(m/num_cores)};
+    int v {p};
+    
+    std::cout << "\nEnter Y, if you want to override the default behavior, else enter N = ";
+    std::string choice {"N"};
+    std::cin >> choice;
+
+    if (choice == "Y")
+    {
+        std::cout << "\nEnter tile width and tile height = ";
+        std::cin >> u >> v;
+    }
 
     /* The result matrix c is divided into tiles each of size u x v and the computation of
        tile(i,j) is sent to thread(i,j). The number of iterations = max_iter_x * max_iter_y where:
